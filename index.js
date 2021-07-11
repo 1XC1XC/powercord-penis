@@ -3,7 +3,7 @@ const { getModule , channels } = require("powercord/webpack")
 const { createBotMessage } = getModule([ "createBotMessage" ], false)
 const { receiveMessage }   = getModule([ "receiveMessage" ], false)
 
-module.exports = class YoutubeMusic extends Plugin {
+module.exports = class Penis extends Plugin {
     constructor() {
         super()
         
