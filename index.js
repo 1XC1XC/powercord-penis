@@ -2,6 +2,9 @@ const { Plugin } = require("powercord/entities")
 const { getModule , channels } = require("powercord/webpack")
 const { createBotMessage } = getModule([ "createBotMessage" ], false)
 const { receiveMessage }   = getModule([ "receiveMessage" ], false)
+const Settings = require("./Settings")
+
+
 
 module.exports = class Penis extends Plugin {
     constructor() {
@@ -34,37 +37,31 @@ module.exports = class Penis extends Plugin {
     async startPlugin() {
         
         
-        const { sendBotMessage } = this
+        const { sendBotMessage, settings } = this
         
+        powercord.api.settings.registerSettings("penis", {
+            category: this.entityID,
+            label: "Penis",
+            render: Settings
+        })
+
         
         powercord.api.commands.registerCommand({
             command: "penis",
             description: "yes",
             usage: "{c}",
             executor: async (args) => {
-                sendBotMessage(`
-                ........................„„-~^^~„-„„_
-                ..................„-^*'' : : „'' : : : : *-„
-                ..............„-* : : :„„--/ : : : : : : : '\
-                ............./ : : „-* . .| : : : : : : : : '|
-                ............/ : „-* . . . | : : : : : : : : |
-                ............\„-* . . . . .| : : : : : : : :'|
-                ............/ . . . . . . '| : : : : : : : |
-                ........../ . . . . . . . .'\ : : : : : : : |
-                ......../ . . . . . . . . . .\ : : : : : : |
-                ......./ . . . . . . . . . . . '\ : : : : : /
-                ....../ . . . . . . . . . . . . . *-„„„„-*'
-                ....'/ . . . . . . . . . . . . . . '|
-                .../ . . . . . . . ./ . . . . . . .|
-                ../ . . . . . . . .'/ . . . . . . .'|
-                ./ . . . . . . . . / . . . . . . .'|
-                '/ . . . . . . . . . . . . . . . .'|
-                '| . . . . . \ . . . . . . . . . .|
-                '| . . . . . . \„_^- „ . . . . .'|
-                '| . . . . . . . . .'\ .\ ./ '/ . |
-                | .\ . . . . . . . . . \ .'' / . '|
-                | . . . . . . . . . . / .'/ . . .|
-                | . . . . . . .| . . / ./ ./ . .|`)
+                const cog = `\n........................„„-~^^~„-„„_\n..................„-^*'' : : „'' : : : : *-„\n..............„-* : : :„„--/ : : : : : : : '\ \n............./ : : „-* . .| : : : : : : : : '|\n............/ : „-* . . . | : : : : : : : : |\n............\„-* . . . . .| : : : : : : : :'|\n............/ . . . . . . '| : : : : : : : |\n........../ . . . . . . . .'\ : : : : : : : |\n......../ . . . . . . . . . .\ : : : : : : |\n......./ . . . . . . . . . . . '\ : : : : : /\n....../ . . . . . . . . . . . . . *-„„„„-*'\n....'/ . . . . . . . . . . . . . . '|\n.../ . . . . . . . ./ . . . . . . .|\n../ . . . . . . . .'/ . . . . . . .'|\n./ . . . . . . . . / . . . . . . .'|${"\n./ . . . . . . . . . . . . . . . .'|".repeat(Math.floor(10 * ((settings.get("size", 10))/100)))}\n'/ . . . . . . . . . . . . . . . .'|\n'| . . . . . \ . . . . . . . . . .|\n'| . . . . . . \„_^- „ . . . . .'|\n'| . . . . . . . . .'\ .\ ./ '/ . |\n| .\ . . . . . . . . . \ .'' / . '|\n| . . . . . . . . . . / .'/ . . .|\n| . . . . . . .| . . / ./ ./ . .|`
+
+
+                if (settings.get("send")) {
+                    return {
+                        send: true,
+                        result: cog
+                    }
+                } else {
+                    sendBotMessage(cog)
+                }
             }
         })
 
@@ -72,6 +69,7 @@ module.exports = class Penis extends Plugin {
     
     pluginWillUnload() {
         // Object.values(commands).forEach(command => powercord.api.commands.unregisterCommand(command.command))
+        powercord.api.settings.unregisterSettings("penis")
         powercord.api.commands.unregisterCommand("penis")
         
     }
